@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,11 +11,11 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
-    Long id;
-    @NotBlank(message = "Имя не может быть пустым")
-    String name;
-    @Email(message = "Некорректный ввод почты")
+public class UserDto {
+    private Long id;
+    @NotBlank(message = "Имя пользователя не может быть пустым.")
+    private String name;
+    @Email(message = "Некорректный E-mail.")
     @NotBlank(message = "Почта не может быть пустой")
-    String email;
+    private String email;
 }
