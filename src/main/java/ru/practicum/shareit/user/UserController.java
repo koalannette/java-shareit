@@ -18,7 +18,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final static String REQUEST_HEADER = "X-Sharer-User-Id";
+    private static final String REQUEST_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     public UserDto createUser(@RequestBody @Valid UserDto userDto) {
