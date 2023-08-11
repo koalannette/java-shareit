@@ -2,9 +2,12 @@ package ru.practicum.shareit.user.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.interfaces.Create;
+import ru.practicum.shareit.interfaces.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @Builder
@@ -13,9 +16,9 @@ import javax.validation.constraints.NotBlank;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     private Long id;
-    @NotBlank(message = "Имя пользователя не может быть пустым.")
+    @NotBlank(groups = {Create.class})
     private String name;
-    @Email(message = "Некорректный E-mail.")
-    @NotBlank(message = "Почта не может быть пустой")
+    @Email(groups = {Create.class, Update.class})
+    @NotEmpty(groups = {Create.class})
     private String email;
 }

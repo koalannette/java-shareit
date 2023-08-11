@@ -2,11 +2,12 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.interfaces.Create;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class ItemController {
     private static final String REQUEST_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDto createItem(@RequestHeader(REQUEST_HEADER) Long id, @RequestBody @Valid ItemDto itemDto) {
+    public ItemDto createItem(@RequestHeader(REQUEST_HEADER) Long id, @Validated(Create.class) @RequestBody ItemDto itemDto) {
         log.info("Поступил запрос на добавление вещи.");
         return itemService.createItem(id, itemDto);
     }

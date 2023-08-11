@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.interfaces.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,11 +15,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ItemDto {
     private Long id;
-    @NotBlank(message = "Название вещи не может быть пустым")
+    @NotBlank(groups = Create.class)
     private String name;
-    @NotBlank(message = "Описание вещи не может быть пустым")
+    @NotBlank(groups = Create.class)
     private String description;
-    @NotNull(message = "Статус вещи не может быть null.")
+    @NotNull(groups = Create.class)
     private Boolean available;
 
 }

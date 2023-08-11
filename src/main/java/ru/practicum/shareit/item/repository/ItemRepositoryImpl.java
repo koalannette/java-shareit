@@ -18,10 +18,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, Item> items = new HashMap<>();
     private Long itemId = 0L;
 
-    private Long getIdForItem() {
-        return ++itemId;
-    }
-
     @Override
     public Item save(Item item) {
         item.setId(getIdForItem());
@@ -36,10 +32,10 @@ public class ItemRepositoryImpl implements ItemRepository {
         if (!item.getOwnerId().equals(ownerId)) {
             throw new NotFoundException("Предмет пользователя с id " + ownerId + " не найден");
         }
-        if (updateItem.getName() != null) {
+        if (updateItem.getName() != null && !updateItem.getName().isBlank()) {
             item.setName(updateItem.getName());
         }
-        if (updateItem.getDescription() != null) {
+        if (updateItem.getDescription() != null && !updateItem.getDescription().isBlank()) {
             item.setDescription(updateItem.getDescription());
         }
         if (updateItem.getAvailable() != null) {
@@ -68,6 +64,10 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .filter(item -> item.getName().toLowerCase().contains(lowerText)
                         || item.getDescription().toLowerCase().contains(lowerText))
                 .collect(Collectors.toList());
+    }
+
+    private Long getIdForItem() {
+        return ++itemId;
     }
 
 }
