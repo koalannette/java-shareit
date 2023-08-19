@@ -17,6 +17,6 @@ public class CommentDto {
     private String text;
     //private Long itemId;
     private String author;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;
 }
