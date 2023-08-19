@@ -93,6 +93,7 @@ public class ItemServiceImpl implements ItemService {
                         .lastBooking(getLastBookingForItem(item.getId()))
                         .nextBooking(getNextBookingForItem(item.getId()))
                         .available(item.getAvailable())
+                        .comments(new HashSet<>(getItemComments(item.getId())))
                         .build())
                 .sorted(Comparator.comparing(ItemDtoResponse::getId))
                 .collect(Collectors.toList());

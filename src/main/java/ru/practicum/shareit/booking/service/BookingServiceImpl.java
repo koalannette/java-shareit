@@ -2,9 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -50,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDtoResponse approvedOrRejected(Boolean approved, long ownerId, long bookingId) {
-        User user = checkUserExistAndGet(ownerId);
+        checkUserExistAndGet(ownerId);
         Booking booking = checkBookingExistAndGet(bookingId);
         if (!booking.getItem().getOwner().getId().equals(ownerId)) {
             throw new NotFoundException("Пользователь не является владельцем вещи.");
@@ -72,15 +70,14 @@ public class BookingServiceImpl implements BookingService {
         if (!(booking.getBooker().getId().equals(userId) || booking.getItem().getOwner().getId().equals(userId))) {
             throw new NotFoundException("Пользователь " + userId + " не бронировал и не является владелецем забронированной вещи");
         }
-        // log.info("Бронирование веши {} создано. Ожидает изменение статуса со стороны владельца.", item);
+        log.info("Отправлены данные о бронирование веши {} .", booking);
         return BookingMapper.toBookingDtoResponseFromBooking(booking);
     }
 
     @Override
     public Collection<BookingDtoResponse> getBookingsByBookerId(BookingState state, long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Пользователь " + userId + " не найден");
+            throw new NotFoundException("Пользователь " + userId + " не найден");
         } else {
             return getBookingDtoList(state.toString(), userId, false);
         }
@@ -89,11 +86,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Collection<BookingDtoResponse> getBookingsByOwnerId(BookingState state, long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь " + userId + " не найден");
+            throw new NotFoundException("Пользователь " + userId + " не найден");
         }
         if (!itemRepository.existsItemByOwnerId(userId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "У пользователя " + userId + " нет вещей для бронирования");
+            throw new NotFoundException("У пользователя " + userId + " нет вещей для бронирования");
         } else {
             return getBookingDtoList(state.toString(), userId, true);
         }

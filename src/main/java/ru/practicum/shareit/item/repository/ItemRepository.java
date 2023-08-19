@@ -11,8 +11,6 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Boolean existsByOwner_Id(Long ownerId);
-
     List<Item> findItemByOwner_Id(Long ownerId);
 
     List<Item> findItemByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(String text1, String text2);

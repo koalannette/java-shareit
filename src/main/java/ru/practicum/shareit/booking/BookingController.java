@@ -35,7 +35,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse approvedOrRejected(@RequestParam(name = "approved") Boolean approved,
-                                                 @RequestHeader(REQUEST_HEADER) long ownerId,
+                                                 @RequestHeader(REQUEST_HEADER) Long ownerId,
                                                  @PathVariable("bookingId") Long bookingId) {
         log.info("Подтверждение или отклонение запроса на бронировании");
         return bookingService.approvedOrRejected(approved, ownerId, bookingId);
@@ -43,14 +43,14 @@ public class BookingController {
 
 
     @GetMapping("/{bookingId}")
-    public BookingDtoResponse getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public BookingDtoResponse getBooking(@RequestHeader(REQUEST_HEADER) Long userId,
                                          @PathVariable long bookingId) {
         log.info("Получение данных о бронировании по id");
         return bookingService.getBooking(bookingId, userId);
     }
 
     @GetMapping
-    public Collection<BookingDtoResponse> getBookingsByBookerId(@RequestHeader("X-Sharer-User-Id") long userId,
+    public Collection<BookingDtoResponse> getBookingsByBookerId(@RequestHeader(REQUEST_HEADER) Long userId,
                                                                 @RequestParam(required = false) BookingState state) {
         if (state == null) {
             state = ALL;
@@ -60,7 +60,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public Collection<BookingDtoResponse> getBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") long ownerId,
+    public Collection<BookingDtoResponse> getBookingsByOwnerId(@RequestHeader(REQUEST_HEADER) Long ownerId,
                                                                @RequestParam(defaultValue = "ALL") BookingState state) {
         log.info("Получение списка бронирований для всех вещей пользователя по его id");
         return bookingService.getBookingsByOwnerId(state, ownerId);

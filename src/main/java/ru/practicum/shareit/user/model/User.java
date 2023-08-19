@@ -5,7 +5,8 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
-@Data
+@Setter
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,6 @@ public class User {
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String name;
     @Column(unique = true)
     String email;

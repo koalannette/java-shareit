@@ -3,6 +3,8 @@ package ru.practicum.shareit.booking.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -13,4 +15,6 @@ import lombok.experimental.FieldDefaults;
 public class BookingBookerDto {
     Long id;
     Long bookerId;
+    LocalDateTime start;
+    LocalDateTime end;
 }
