@@ -7,18 +7,18 @@ import ru.practicum.shareit.interfaces.Update;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-@Data
+@Setter
+@Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     private Long id;
     @NotBlank(groups = {Create.class})
     private String name;
     @Email(groups = {Create.class, Update.class})
-    @NotEmpty(groups = {Create.class})
+    @NotNull(groups = {Create.class}, message = "не должно равняться null")
     private String email;
+
 }
