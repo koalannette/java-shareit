@@ -41,7 +41,6 @@ public class BookingController {
         return bookingService.approvedOrRejected(approved, ownerId, bookingId);
     }
 
-
     @GetMapping("/{bookingId}")
     public BookingDtoResponse getBooking(@RequestHeader(REQUEST_HEADER) Long userId,
                                          @PathVariable long bookingId) {
@@ -51,19 +50,35 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingDtoResponse> getBookingsByBookerId(@RequestHeader(REQUEST_HEADER) Long userId,
-                                                                @RequestParam(required = false) BookingState state) {
+                                                                @RequestParam(required = false) BookingState state,
+                                                                @RequestParam(defaultValue = "0", required = false) Integer from,
+                                                                @RequestParam(defaultValue = "10", required = false) Integer size) {
         if (state == null) {
             state = ALL;
         }
+
+        if ((from == 0 && size == 0) || (size <= 0) || (from < 0)) {
+            throw new NotAvailableException("Неверно переданы параметры from или size");
+        }
+
         log.info("Получение списка всех бронирований пользователя по его id");
-        return bookingService.getBookingsByBookerId(state, userId);
+        return bookingService.getBookingsByBookerId(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDtoResponse> getBookingsByOwnerId(@RequestHeader(REQUEST_HEADER) Long ownerId,
-                                                               @RequestParam(defaultValue = "ALL") BookingState state) {
+                                                               @RequestParam(defaultValue = "ALL") BookingState state,
+                                                               @RequestParam(defaultValue = "0", required = false) Integer from,
+                                                               @RequestParam(defaultValue = "10", required = false) Integer size) {
+
+
+        if ((from == 0 && size == 0) || (size <= 0) || (from < 0)) {
+            throw new NotAvailableException("Неверно переданы параметры from или size");
+        }
+
+
         log.info("Получение списка бронирований для всех вещей пользователя по его id");
-        return bookingService.getBookingsByOwnerId(state, ownerId);
+        return bookingService.getBookingsByOwnerId(state, ownerId, from, size);
     }
 
 }

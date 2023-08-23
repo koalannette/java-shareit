@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "items")
@@ -40,8 +42,9 @@ public class Item {
     @JoinColumn(name = "owner_id")
     User owner;
 
-//    @Transient
-//    ItemRequest request;
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    ItemRequest request;
 
     @Transient
     Booking lastBooking;
