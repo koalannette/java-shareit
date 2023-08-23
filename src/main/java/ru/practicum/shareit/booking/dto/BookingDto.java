@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter
 @Getter
+@EqualsAndHashCode
 public class BookingDto {
     private Long id;
     @FutureOrPresent
