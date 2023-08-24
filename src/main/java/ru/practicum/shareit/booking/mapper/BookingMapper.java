@@ -8,8 +8,8 @@ import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookingMapper {
 
@@ -58,10 +58,13 @@ public class BookingMapper {
                 .build();
     }
 
-    public static List<BookingDto> toBookingDtoList(List<Booking> bookings) {
-        return bookings.stream()
-                .map(BookingMapper::toBookingDto)
-                .collect(Collectors.toList());
-    }
+    public static List<BookingDtoResponse> toBookingDtoList(Iterable<Booking> bookings) {
+        List<BookingDtoResponse> result = new ArrayList<>();
 
+        for (Booking booking : bookings) {
+            result.add(toBookingDtoResponseFromBooking(booking));
+        }
+        return result;
+    }
 }
+

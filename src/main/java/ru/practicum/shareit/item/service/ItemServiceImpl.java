@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingBookerDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -20,6 +21,7 @@ import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -36,12 +38,19 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public ItemDtoResponse createItem(Long ownerId, ItemDto itemDto) {
         User user = checkUserExistAndGet(ownerId);
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user);
+
+        if (itemDto.getRequestId() != null) {
+            checkRequest(itemDto.getRequestId());
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).get());
+        }
+
         return ItemMapper.toItemDtoResponseFromItem(itemRepository.save(item));
     }
 
@@ -81,9 +90,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoResponse> getItemsByUserId(Long id) {
+    public List<ItemDtoResponse> getItemsByUserId(Long id, Integer from, Integer size) {
         checkUserExistAndGet(id);
-        List<Item> items = itemRepository.findItemByOwner_Id(id);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
+        List<Item> items = itemRepository.findItemByOwner_Id(id, pageRequest);
 
         List<ItemDtoResponse> itemDtoResponses = items.stream()
                 .map(item -> ItemDtoResponse.builder()
@@ -103,11 +114,14 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<ItemDtoResponse> getItemsByText(String text) {
+    public List<ItemDtoResponse> getItemsByText(String text, Integer from, Integer size) {
+
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        List<Item> items = itemRepository.findItemByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text);
+        List<Item> items = itemRepository.findItemByNameOrDescriptionContainingIgnoreCaseAndAvailableTrue(text, text, pageRequest);
         return ItemMapper.toItemDtoResponseListFromItemList(items);
     }
 
@@ -153,5 +167,11 @@ public class ItemServiceImpl implements ItemService {
     private List<CommentDtoResponse> getItemComments(Long itemId) {
         return commentRepository.findAllByItemId(itemId).stream()
                 .map(CommentMapper::toCommentDtoResponseFromComment).collect(Collectors.toList());
+    }
+
+    private void checkRequest(Long requestId) {
+        if (!itemRequestRepository.existsById(requestId)) {
+            throw new NotFoundException("Запроса не существует");
+        }
     }
 }

@@ -10,11 +10,11 @@ public interface BookingService {
 
     BookingDtoResponse createBooking(Long userId, BookingDto bookingDto);
 
-    BookingDtoResponse approvedOrRejected(Boolean approved, long ownerId, long bookingId);
+    BookingDtoResponse approvedOrRejected(Boolean approved, Long ownerId, Long bookingId);
 
-    BookingDtoResponse getBooking(long bookingId, long userId);
+    BookingDtoResponse getBooking(Long bookingId, Long userId);
 
-    Collection<BookingDtoResponse> getBookingsByBookerId(BookingState state, long userId);
+    Collection<BookingDtoResponse> getBookingsByBookerId(BookingState state, Long userId, Integer from, Integer size);
 
-    Collection<BookingDtoResponse> getBookingsByOwnerId(BookingState state, long userId);
+    Collection<BookingDtoResponse> getBookingsByOwnerId(BookingState state, Long userId, Integer from, Integer size);
 }

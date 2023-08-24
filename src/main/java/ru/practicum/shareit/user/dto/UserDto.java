@@ -12,7 +12,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @Builder
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class UserDto {
     private Long id;
     @NotBlank(groups = {Create.class})
