@@ -150,7 +150,6 @@
                     <configuration>
                         <excludes>
                             <excludes>**/ShareItApp,class</excludes>
-                            <excludes>**/BookingServiceImplUnit,class</excludes>
                         </excludes>
                         <output>file</output>
                     </configuration>
