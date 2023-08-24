@@ -97,7 +97,6 @@ public class ItemControllerTest {
                 .name("Молоток")
                 .description("Забивает гвозди")
                 .available(true)
-                //.comments(List.of(commentDto))
                 .requestId(itemRequest.getId())
                 .build();
 
@@ -106,7 +105,6 @@ public class ItemControllerTest {
                 .name("guitar")
                 .description("a very good tool")
                 .available(true)
-                //.comments(Collections.emptyList())
                 .requestId(itemRequest.getId())
                 .build();
 

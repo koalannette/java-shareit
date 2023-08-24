@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -36,16 +35,6 @@ public class ItemMapper {
                 .available(itemDto.getAvailable()).build();
     }
 
-    public static ItemOwnerDto toItemOwnerDto(Item item) {
-        return ItemOwnerDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .ownerId(item.getOwner().getId())
-                .build();
-    }
-
     public static ItemDtoResponse toItemDtoResponseFromItem(Item item) {
         if (item == null) {
             return null;
@@ -63,12 +52,6 @@ public class ItemMapper {
         }
         return itemDto;
 
-    }
-
-    public static List<ItemDto> toItemDtoList(List<Item> items) {
-        return items.stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
     }
 
     public static List<ItemDtoResponse> toItemDtoResponseListFromItemList(List<Item> items) {

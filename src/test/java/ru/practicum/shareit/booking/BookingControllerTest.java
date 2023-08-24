@@ -107,7 +107,7 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.booker.id", is(bookindDtoResponse1Dto.getBooker().getId()), Long.class))
                 .andExpect(jsonPath("$.item.id", is(bookindDtoResponse1Dto.getItem().getId()), Long.class));
 
-        //verify(bookingService, times(1)).createBooking(1L, bookingDto);
+        verify(bookingService, times(1)).createBooking(1L, bookingDto);
     }
 
     @Test

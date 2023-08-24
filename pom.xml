@@ -148,7 +148,9 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.8</version>
                     <configuration>
-                        <excludes>**/ShareItApp,class</excludes>
+                        <excludes>
+                            <excludes>**/ShareItApp,class</excludes>
+                        </excludes>
                         <output>file</output>
                     </configuration>
                     <executions>
