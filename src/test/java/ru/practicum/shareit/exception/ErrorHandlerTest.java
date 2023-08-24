@@ -33,12 +33,5 @@ public class ErrorHandlerTest {
         assertEquals(errorResponse.getError(), "Internal server error");
     }
 
-//    @Test
-//    public void handleValidationExceptionTest() {
-//        MethodArgumentNotValidException e = new MethodArgumentNotValidException("Internal server error");
-//        ErrorResponse errorResponse = handler.handleThrowable(e);
-//        assertNotNull(errorResponse);
-//        assertEquals(errorResponse.getError(), "Internal server error");
-//    }
 }
 
