@@ -1,6 +1,11 @@
 package ru.practicum.shareit.exception;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,6 +20,17 @@ public class ErrorHandlerTest {
         ErrorResponse errorResponse = handler.handleNotAvailableException(e);
         assertNotNull(errorResponse);
         assertEquals(errorResponse.getError(), "Не доступен запрос");
+    }
+
+    @Test
+    public void handleValidation_ReturnsBadRequest() {
+        ErrorHandler errorHandler = new ErrorHandler();
+        Exception exception = new ConstraintViolationException("Validation error", null);
+        ErrorResponse errorResponse = errorHandler.handleValidation(exception);
+        ResponseEntity<ErrorResponse> response = new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Validation error", response.getBody().getError());
     }
 
     @Test
@@ -33,12 +49,5 @@ public class ErrorHandlerTest {
         assertEquals(errorResponse.getError(), "Internal server error");
     }
 
-//    @Test
-//    public void handleValidationExceptionTest() {
-//        MethodArgumentNotValidException e = new MethodArgumentNotValidException("Internal server error");
-//        ErrorResponse errorResponse = handler.handleThrowable(e);
-//        assertNotNull(errorResponse);
-//        assertEquals(errorResponse.getError(), "Internal server error");
-//    }
 }
 

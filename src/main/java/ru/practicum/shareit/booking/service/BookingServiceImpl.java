@@ -23,7 +23,6 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -81,14 +80,9 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь " + userId + " не найден");
         } else {
-            if (from != null && size != null) {
-                PageRequest pageRequest = PageRequest.of(from / size, size);
-                Page<Booking> bookings = getBookingPage(state.toString(), userId, false, pageRequest);
-
-
-                return BookingMapper.toBookingDtoList(bookings);
-            }
-            return getBookingDtoList(state.toString(), userId, false);
+            PageRequest pageRequest = PageRequest.of(from / size, size);
+            Page<Booking> bookings = getBookingPage(state.toString(), userId, false, pageRequest);
+            return BookingMapper.toBookingDtoList(bookings);
         }
     }
 
@@ -100,14 +94,9 @@ public class BookingServiceImpl implements BookingService {
         if (!itemRepository.existsItemByOwnerId(userId)) {
             throw new NotFoundException("У пользователя " + userId + " нет вещей для бронирования");
         } else {
-            if (from != null && size != null) {
-                PageRequest pageRequest = PageRequest.of(from / size, size);
-                Page<Booking> bookings = getBookingPage(state.toString(), userId, true, pageRequest);
-                return BookingMapper.toBookingDtoList(bookings);
-            } else {
-
-                return getBookingDtoList(state.toString(), userId, true);
-            }
+            PageRequest pageRequest = PageRequest.of(from / size, size);
+            Page<Booking> bookings = getBookingPage(state.toString(), userId, true, pageRequest);
+            return BookingMapper.toBookingDtoList(bookings);
         }
     }
 
@@ -128,116 +117,6 @@ public class BookingServiceImpl implements BookingService {
     private Booking checkBookingExistAndGet(Long bookingId) {
         return bookingRepository.findById(bookingId).orElseThrow(
                 () -> new NotFoundException("Бронь с id = " + bookingId + " не найден."));
-    }
-
-    private List<BookingDtoResponse> getBookingDtoList(String state, Long userId, Boolean isOwner) {
-        List<Long> itemsId;
-        List<BookingDtoResponse> bookingDtoList;
-
-        switch (BookingState.checkState(state.toUpperCase())) {
-            case ALL:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInOrderByStartDesc(itemsId)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdOrderByStartDesc(userId)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            case CURRENT:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-                                    itemsId, LocalDateTime.now(), LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-                                    userId, LocalDateTime.now(), LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            case PAST:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInAndEndIsBeforeOrderByStartDesc(itemsId, LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            case FUTURE:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInAndStartIsAfterOrderByStartDesc(itemsId, LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now())
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            case WAITING:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInAndStatusIsOrderByStartDesc(itemsId, Status.WAITING)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdAndStatusIsOrderByStartDesc(userId, Status.WAITING)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            case REJECTED:
-                if (isOwner) {
-                    itemsId = itemRepository.findAllItemIdByOwnerId(userId);
-                    bookingDtoList = bookingRepository
-                            .findAllByItemIdInAndStatusIsOrderByStartDesc(itemsId, Status.REJECTED)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                } else {
-                    bookingDtoList = bookingRepository
-                            .findAllByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponseFromBooking)
-                            .collect(Collectors.toList());
-                }
-                break;
-            default:
-                throw new StateException("Unknown state: " + state);
-        }
-
-        return bookingDtoList;
     }
 
     private Page<Booking> getBookingPage(String state, Long userId, Boolean isOwner, PageRequest pageRequest) {
