@@ -35,7 +35,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto createItemRequest(Long userId, ItemRequestSmallDto itemRequestDto) {
         User user = checkUserExistAndGet(userId);
-        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto, user, List.of(), LocalDateTime.now());
+        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(itemRequestDto, user, LocalDateTime.now());
         return ItemRequestMapper.toItemRequestDto(itemRequestRepository.save(itemRequest), List.of());
     }
 

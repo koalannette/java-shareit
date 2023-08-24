@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -10,6 +11,8 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.NotAvailableException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Collection;
 
 import static ru.practicum.shareit.booking.model.BookingState.ALL;
@@ -18,6 +21,7 @@ import static ru.practicum.shareit.booking.model.BookingState.ALL;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class BookingController {
 
     private final BookingService bookingService;
@@ -51,16 +55,11 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDtoResponse> getBookingsByBookerId(@RequestHeader(REQUEST_HEADER) Long userId,
                                                                 @RequestParam(required = false) BookingState state,
-                                                                @RequestParam(defaultValue = "0", required = false) Integer from,
-                                                                @RequestParam(defaultValue = "10", required = false) Integer size) {
+                                                                @RequestParam(defaultValue = "0") @Min(0) Integer from,
+                                                                @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size) {
         if (state == null) {
             state = ALL;
         }
-
-        if ((from == 0 && size == 0) || (size <= 0) || (from < 0)) {
-            throw new NotAvailableException("Неверно переданы параметры from или size");
-        }
-
         log.info("Получение списка всех бронирований пользователя по его id");
         return bookingService.getBookingsByBookerId(state, userId, from, size);
     }
@@ -68,15 +67,8 @@ public class BookingController {
     @GetMapping("/owner")
     public Collection<BookingDtoResponse> getBookingsByOwnerId(@RequestHeader(REQUEST_HEADER) Long ownerId,
                                                                @RequestParam(defaultValue = "ALL") BookingState state,
-                                                               @RequestParam(defaultValue = "0", required = false) Integer from,
-                                                               @RequestParam(defaultValue = "10", required = false) Integer size) {
-
-
-        if ((from == 0 && size == 0) || (size <= 0) || (from < 0)) {
-            throw new NotAvailableException("Неверно переданы параметры from или size");
-        }
-
-
+                                                               @RequestParam(defaultValue = "0") @Min(0) Integer from,
+                                                               @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size) {
         log.info("Получение списка бронирований для всех вещей пользователя по его id");
         return bookingService.getBookingsByOwnerId(state, ownerId, from, size);
     }

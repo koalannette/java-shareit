@@ -14,9 +14,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemRequestMapper {
 
-    public static ItemRequest toItemRequest(ItemRequestSmallDto itemRequest, User requester, List<ItemRequestDto> items, LocalDateTime date) {
+    public static ItemRequest toItemRequest(ItemRequestSmallDto itemRequest, User requester, LocalDateTime date) {
         return ItemRequest.builder()
-                //.id(itemRequest.)
                 .description(itemRequest.getDescription())
                 .requester(requester)
                 .created(date)
