@@ -15,8 +15,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Collection;
 
-import static ru.practicum.shareit.booking.model.BookingState.ALL;
-
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
