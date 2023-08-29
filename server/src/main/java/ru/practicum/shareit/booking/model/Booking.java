@@ -6,8 +6,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
 
 @Setter
@@ -24,10 +22,8 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long id;
-    @FutureOrPresent(message = "Начало бронирования не может быть в прошлом")
     @Column(name = "start_time")
     private LocalDateTime start;
-    @Future(message = "Окончание бронирования не может быть в прошлом")
     @Column(name = "end_time")
     private LocalDateTime end;
     @ManyToOne

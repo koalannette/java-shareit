@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,7 +21,6 @@ public class ItemRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id", nullable = false)
     private Long id;
-    @NotEmpty(message = "Описание не может быть пустым")
     String description;
     @ManyToOne
     @JoinColumn(name = "requester_id")

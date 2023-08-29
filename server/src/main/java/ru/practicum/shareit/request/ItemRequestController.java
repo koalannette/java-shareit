@@ -8,10 +8,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestSmallDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -25,7 +21,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto createItemRequest(@RequestHeader(REQUEST_HEADER) Long userId,
-                                            @RequestBody @Valid ItemRequestSmallDto itemRequest) {
+                                            @RequestBody ItemRequestSmallDto itemRequest) {
         log.info("SERVER: Поступил запрос на добавление нового запроса вещи = {} .", itemRequest);
         return itemRequestService.createItemRequest(userId, itemRequest);
     }
@@ -38,8 +34,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader(REQUEST_HEADER) Long userId,
-                                               @RequestParam(defaultValue = "0") @Min(0) @Positive Integer from,
-                                               @RequestParam(defaultValue = "20") @Min(1) @Max(100) Integer size) {
+                                               @RequestParam(defaultValue = "0") Integer from,
+                                               @RequestParam(defaultValue = "20") Integer size) {
         if ((from == 0 && size == 0) || (size <= 0) || (from < 0)) {
             throw new NotAvailableException("Неверно переданы параметры from или size");
         }

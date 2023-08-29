@@ -2,16 +2,13 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.interfaces.Create;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentDtoResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +21,7 @@ public class ItemController {
     private static final String REQUEST_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDtoResponse createItem(@RequestHeader(REQUEST_HEADER) Long id, @Validated(Create.class) @RequestBody ItemDto itemDto) {
+    public ItemDtoResponse createItem(@RequestHeader(REQUEST_HEADER) Long id, @RequestBody ItemDto itemDto) {
         log.info("SERVER: Поступил запрос на добавление вещи.");
         return itemService.createItem(id, itemDto);
     }
@@ -60,7 +57,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDtoResponse addComment(@RequestHeader(REQUEST_HEADER) Long userId,
-                                         @PathVariable Long itemId, @RequestBody @Valid CommentDto commentDto) {
+                                         @PathVariable Long itemId, @RequestBody CommentDto commentDto) {
         log.info("SERVER: Получен запрос на добавление отзыва " +
                 "для вещи с id = {} пользователем с id = {} .", itemId, userId);
         return itemService.addComment(commentDto, itemId, userId);

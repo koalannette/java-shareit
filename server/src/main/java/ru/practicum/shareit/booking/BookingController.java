@@ -10,9 +10,6 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.NotAvailableException;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.Collection;
 
 @RestController
@@ -27,7 +24,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDtoResponse createBooking(@RequestHeader(REQUEST_HEADER) Long bookerId,
-                                            @RequestBody @Valid BookingDto bookingDto) {
+                                            @RequestBody BookingDto bookingDto) {
         log.info("SERVER: Поступил запрос на бронирование вещи пользователем с id = {} .", bookerId);
         if (bookingDto.getStart().equals(bookingDto.getEnd()) || bookingDto.getStart().isAfter(bookingDto.getEnd())) {
             throw new NotAvailableException("Начало бронирования не может быть равно или или быть позже окончанию бронирования");
@@ -53,8 +50,8 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDtoResponse> getBookingsByBookerId(@RequestHeader(REQUEST_HEADER) Long userId,
                                                                 @RequestParam(defaultValue = "ALL") BookingState state,
-                                                                @RequestParam(defaultValue = "0") @Min(0) Integer from,
-                                                                @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size) {
+                                                                @RequestParam(defaultValue = "0") Integer from,
+                                                                @RequestParam(defaultValue = "10") Integer size) {
         log.info("SERVER: Получение списка всех бронирований пользователя по его id");
         return bookingService.getBookingsByBookerId(state, userId, from, size);
     }
@@ -62,8 +59,8 @@ public class BookingController {
     @GetMapping("/owner")
     public Collection<BookingDtoResponse> getBookingsByOwnerId(@RequestHeader(REQUEST_HEADER) Long ownerId,
                                                                @RequestParam(defaultValue = "ALL") BookingState state,
-                                                               @RequestParam(defaultValue = "0") @Min(0) Integer from,
-                                                               @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer size) {
+                                                               @RequestParam(defaultValue = "0") Integer from,
+                                                               @RequestParam(defaultValue = "10") Integer size) {
         log.info("SERVER: Получение списка бронирований для всех вещей пользователя по его id");
         return bookingService.getBookingsByOwnerId(state, ownerId, from, size);
     }

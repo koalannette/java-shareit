@@ -1,14 +1,13 @@
 package ru.practicum.shareit.exception;
 
+import io.micrometer.core.instrument.config.validate.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 
 @Slf4j
 @RestControllerAdvice
