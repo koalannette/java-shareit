@@ -1,10 +1,9 @@
 package ru.practicum.shareit.exception;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,7 +23,7 @@ public class ErrorHandlerTest {
     @Test
     public void handleValidation_ReturnsBadRequest() {
         ErrorHandler errorHandler = new ErrorHandler();
-        Exception exception = new ConstraintViolationException("Validation error", null);
+        Exception exception = new ConstraintViolationException("Validation error", null, null);
         ErrorResponse errorResponse = errorHandler.handleValidation(exception);
         ResponseEntity<ErrorResponse> response = new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
